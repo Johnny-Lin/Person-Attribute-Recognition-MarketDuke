@@ -57,6 +57,22 @@ def load_image(path):
     return src
 
 
+def load_image_cv(path):
+    import cv2
+    images = cv2.imread(path)
+    images = cv2.resize(images,(144,288))
+    img = images / 255.0  # 0 - 255 to 0.0 - 1.0
+    #img = (img - [0.485, 0.456, 0.406]) / [0.229, 0.224, 0.225]
+    img = (img - [0.406, 0.456, 0.485]) / [0.225, 0.224, 0.229]
+    img = img[:, :, ::-1].transpose(2, 0, 1).copy()  # BGR to RGB, to 3x416x416
+    #img = img.transpose(2, 0, 1).copy()  # , to 3x416x416
+    img = torch.from_numpy(img).float()
+    if img.ndimension() == 3:
+        img = img.unsqueeze(0)
+
+    return img
+
+
 model = get_model(model_name, num_label, use_id=args.use_id, num_id=num_id)
 model = load_network(model)
 model.eval()
@@ -89,6 +105,7 @@ if not args.use_id:
 else:
     out, _ = model.forward(src)
 
+print("--out:",out)
 pred = torch.gt(out, torch.ones_like(out)/2 )  # threshold=0.5
 
 Dec = predict_decoder(args.dataset)

@@ -1,6 +1,12 @@
 # Person-Attribute-Recognition-MarketDuke
 A simple baseline implemented in PyTorch for **pedestrian attribute recognition** task, evaluating on Market-1501-attribute and DukeMTMC-reID-attribute dataset.
 
+## c++
+添加libtorch的推里方法
+
+模型转换在 test_video.py文件下面
+
+
 ## Dataset
 You can get [Market-1501-attribute](https://github.com/vana77/Market-1501_Attribute) and [DukeMTMC-reID-attribute](https://github.com/vana77/DukeMTMC-attribute) annotations from [here](https://github.com/vana77). Also you need to download Market-1501 and DukeMTMC-reID dataset.
 
