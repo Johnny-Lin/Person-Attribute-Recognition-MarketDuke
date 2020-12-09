@@ -7,6 +7,57 @@ A simple baseline implemented in PyTorch for **pedestrian attribute recognition*
 模型转换在 test_video.py文件下面
 
 
+### tensorrt、libtorch对比：
+配置：ubuntu18.04，cpu i78700@3.2GHz, 内存32G, GPU 1070,显存 8G
+1、libtorch：
+    cpu：100%(一个核)
+    内存：6.09-4.5 G
+    GPU: 100% 
+    显存：0.937G
+    推理时间：5.9703ms
+
+2、tensorrt(16位)：
+    cpu：100%(一个核)
+    内存：5.24-4.5 G
+    GPU：100%
+    显存：0.587G
+    推理时间：4ms
+
+3、tensorrt(16位)：
+    cpu：100%(一个核)
+    内存：5.19-4.5 G
+    GPU：99%
+    显存：0.647G
+    推理时间：4.33ms
+
+
+
+## python版本的pytorch、mxnet、onnx、tensorrt的运行时间测试如下：
+
+1、添加使用onnxruntime、tensorRT、pytorch、mxnet推理的测试脚本，测试时间如下：
+	==  resnet50 ==========================================
+	mxnet model time: 11.276960372924805 ms
+	pytorch model time: 14.58641815185547 ms
+	tensorRT model_trt time: 1.1809566497802734 ms
+	onnxruntime time: 5.1631927490234375 ms
+	
+	==  resnet101 =========================================
+	mxnet model time: 16.624927520751953 ms
+	pytorch model time: 21.63546752929688 ms
+	tensorRT model_trt time: 1.7249916076660156 ms
+	onnxruntime time: 7.300853729248047 ms
+	
+	==  resnet152 ========================================
+	mxnet model time: 27.44007110595703 ms
+	pytorch model time: 40.04955291748047 ms
+	tensorRT model_trt time: 1.3611316680908203 ms
+	onnxruntime time: 13.86117935180664 ms
+	
+详见：https://github.com/Johnny-Lin/demo_facedet 
+
+
+
+
 ## Dataset
 You can get [Market-1501-attribute](https://github.com/vana77/Market-1501_Attribute) and [DukeMTMC-reID-attribute](https://github.com/vana77/DukeMTMC-attribute) annotations from [here](https://github.com/vana77). Also you need to download Market-1501 and DukeMTMC-reID dataset.
 
