@@ -29,7 +29,11 @@ void test_pt(){
     int i = 1000;
     while (i--)
     {
+        auto startTime = std::chrono::high_resolution_clock::now();
         torch::Tensor output = module.forward({img_tensor}).toTensor();
+        auto endTime = std::chrono::high_resolution_clock::now();
+        float totalTime = std::chrono::duration<float, std::milli>(endTime - startTime).count();
+        std::cout << "Time used one image (measured by chrono):" << totalTime/1000 << " ms" << std::endl;
     }
     
     torch::Tensor output = module.forward({img_tensor}).toTensor();
