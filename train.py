@@ -24,15 +24,16 @@ dataset_dict = {
 # Argument
 # --------
 parser = argparse.ArgumentParser(description='Training')
-parser.add_argument('--data-path', default='/path/to/dataset', type=str, help='path to the dataset')
+parser.add_argument('--data-path', default='./dataset', type=str, help='path to the dataset')
 parser.add_argument('--dataset', default='market', type=str, help='dataset: market, duke')
 parser.add_argument('--backbone', default='resnet50', type=str, help='backbone: resnet50, resnet34, resnet18, densenet121')
 parser.add_argument('--batch-size', default=32, type=int, help='batch size')
 parser.add_argument('--num-epoch', default=60, type=int, help='num of epoch')
-parser.add_argument('--num-workers', default=2, type=int, help='num_workers')
+parser.add_argument('--num-workers', default=4, type=int, help='num_workers')
 parser.add_argument('--use-id', action='store_true', help='use identity loss')
 parser.add_argument('--lamba', default=1.0, type=float, help='weight of id loss')
 args = parser.parse_args()
+print("-->args:",args)
 
 assert args.dataset in ['market', 'duke']
 assert args.backbone in ['resnet50', 'resnet34', 'resnet18', 'densenet121']
@@ -101,6 +102,9 @@ num_label = image_datasets['train'].num_label()
 num_id = image_datasets['train'].num_id()
 labels_list = image_datasets['train'].labels()
 
+print("-->num label  :", num_label)
+print("-->num id     :", num_id)
+print("-->labels_list:", labels_list)
 
 ######################################################################
 # Model and Optimizer
@@ -159,6 +163,8 @@ def train_model(model, optimizer, scheduler, num_epochs):
                 # forward
                 if not args.use_id:
                     pred_label = model(images)
+                    #print("--->pred_label, labels size :",pred_label.size(), labels.size())
+                    #print("--->pred_label, labels:",pred_label[0], labels[0])
                     total_loss = criterion_bce(pred_label, labels)
                 else:
                     pred_label, pred_id = model(images)
