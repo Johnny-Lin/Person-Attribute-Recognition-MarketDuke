@@ -5,6 +5,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/opencv.hpp>
+#include <sys/time.h>
 
 
 void test_pt(){
@@ -26,16 +27,19 @@ void test_pt(){
 	img_tensor[0][1] = img_tensor[0][1].sub_(0.456).div_(0.224);
 	img_tensor[0][2] = img_tensor[0][2].sub_(0.406).div_(0.225);
 
-    int i = 1000;
+    struct timeval t1,t2;
+	long total = 0;
+    int i = 200;
     while (i--)
     {
-        auto startTime = std::chrono::high_resolution_clock::now();
+        gettimeofday(&t1, nullptr);
         torch::Tensor output = module.forward({img_tensor}).toTensor();
-        auto endTime = std::chrono::high_resolution_clock::now();
-        float totalTime = std::chrono::duration<float, std::milli>(endTime - startTime).count();
-        std::cout << "Time used one image (measured by chrono):" << totalTime/1000 << " ms" << std::endl;
+        gettimeofday(&t2, nullptr);
+		total += (t2.tv_sec - t1.tv_sec) * 1000000 + (t2.tv_usec - t1.tv_usec);
     }
     
+    std::cout << "Time used one image (measured by chrono):" << total/200.0 << " ms" << std::endl;
+
     torch::Tensor output = module.forward({img_tensor}).toTensor();
     std::cout << "forward done " << std::endl;
     //output = output.to(at::kCPU);
@@ -44,6 +48,7 @@ void test_pt(){
     std::cout << output[0][0].item().toFloat() << std::endl;
     std::cout << output[0][0].item().toFloat() << std::endl;
     std::cout << output[0][4] << std::endl;
+
 
     //tensor切片
     
