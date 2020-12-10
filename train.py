@@ -50,8 +50,8 @@ if not os.path.isdir(model_dir):
 ######################################################################
 # Function
 # --------
-def save_network(network, epoch_label):
-    save_filename = 'net_%s.pth'% epoch_label
+def save_network(network, epoch_label,acc):
+    save_filename = 'net_{}_{}.pth'.format(epoch_label,acc)
     save_path = os.path.join(model_dir, save_filename)
     torch.save(network.cpu().state_dict(), save_path)
     if use_gpu:
@@ -132,7 +132,7 @@ exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=40, gamm
 # ------------------
 def train_model(model, optimizer, scheduler, num_epochs):
     since = time.time()
-
+    old_epoch_acc = 0
     for epoch in range(1, num_epochs+1):
         print('Epoch {}/{}'.format(epoch, num_epochs))
         print('-' * 10)
@@ -198,8 +198,10 @@ def train_model(model, optimizer, scheduler, num_epochs):
             # deep copy the model
             if phase == 'val':
                 last_model_wts = model.state_dict()
-                if epoch % 10 == 0:
-                    save_network(model, epoch)
+                #if epoch % 10 == 0 :
+                if epoch_acc > old_epoch_acc :
+                    save_network(model, epoch,epoch_acc)
+                    old_epoch_acc = epoch_acc
                 draw_curve(epoch)
 
     time_elapsed = time.time() - since
@@ -208,7 +210,7 @@ def train_model(model, optimizer, scheduler, num_epochs):
 
     # load best model weights
     model.load_state_dict(last_model_wts)
-    save_network(model, 'last')
+    save_network(model, 'last',epoch_acc)
 
 
 ######################################################################

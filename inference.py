@@ -107,6 +107,7 @@ else:
 
 print("--out:",out)
 pred = torch.gt(out, torch.ones_like(out)/2 )  # threshold=0.5
+print("--pred:",pred)
 
 Dec = predict_decoder(args.dataset)
 Dec.decode(pred)
